@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LusterShop - Магазин люстр</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Шапка */
+        .header {
+            background: #1a1a1a;
+            color: white;
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            color: #fbbf24;
+            font-size: 28px;
+        }
+
+        .nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            transition: color 0.3s;
+        }
+
+        .nav a:hover {
+            color: #fbbf24;
+        }
+
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #fbbf24;
+            color: #1a1a1a;
+            font-size: 12px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* Герой */
+        .hero {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            text-align: center;
+            padding: 100px 0;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 40px;
+            background: #fbbf24;
+            color: #1a1a1a;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: #f59e0b;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Секции */
+        .section {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .section-title:after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background: #fbbf24;
+            margin: 15px auto 0;
+        }
+
+        /* Категории */
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+
+        .category {
+            padding: 40px;
+            border-radius: 10px;
+            color: white;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .category:hover {
+            transform: translateY(-5px);
+        }
+
+        .category h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        /* Товары */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        .badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #ef4444;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+            z-index: 1;
+        }
+
+        .badge.new {
+            background: #10b981;
+        }
+
+        .badge.sale {
+            background: #fbbf24;
+            color: #1a1a1a;
+        }
+
+        .product-image {
+            height: 200px;
+            background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+        }
+
+        .product-info {
+            padding: 20px;
+        }
+
+        .product-info h3 {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .price {
+            font-size: 20px;
+            font-weight: bold;
+            color: #fbbf24;
+            margin: 10px 0;
+        }
+
+        .old-price {
+            font-size: 14px;
+            color: #999;
+            text-decoration: line-through;
+            margin-right: 10px;
+            font-weight: normal;
+        }
+
+        .product-card button {
+            width: 100%;
+            padding: 10px;
+            background: #1a1a1a;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .product-card button:hover {
+            background: #fbbf24;
+            color: #1a1a1a;
+        }
+
+        /* Преимущества */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+
+        .feature {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .feature i {
+            font-size: 40px;
+            color: #fbbf24;
+            margin-bottom: 20px;
+        }
+
+        /* Подвал */
+        .footer {
+            background: #1a1a1a;
+            color: white;
+            padding: 60px 0 20px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 50px;
+            margin-bottom: 40px;
+        }
+
+        .footer h3 {
+            margin-bottom: 20px;
+            color: #fbbf24;
+        }
+
+        .footer p {
+            margin-bottom: 10px;
+            color: #ccc;
+        }
+
+        .footer i {
+            margin-right: 10px;
+            color: #fbbf24;
+        }
+
+        .social a {
+            color: white;
+            font-size: 24px;
+            margin-right: 15px;
+            transition: color 0.3s;
+        }
+
+        .social a:hover {
+            color: #fbbf24;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+            color: #666;
+        }
+
+        /* Корзина модальная */
+        .cart-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .cart-modal.show {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .cart-content {
+            width: 400px;
+            background: white;
+            height: 100%;
+            padding: 30px;
+            overflow-y: auto;
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .close-cart {
+            font-size: 30px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-total {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #f0f0f0;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: right;
+        }
+
+        .cart-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .cart-buttons button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .checkout-btn {
+            background: #fbbf24;
+            color: #1a1a1a;
+        }
+
+        .close-btn {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        @media (max-width: 768px) {
+            .nav { display: none; }
+            .categories-grid,
+            .products-grid,
+            .features-grid,
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+            .hero h1 { font-size: 32px; }
+            .cart-content { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Шапка -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-lightbulb"></i>
+                    <span>LusterShop</span>
+                </div>
+                <nav class="nav">
+                    <a href="#home">Главная</a>
+                    <a href="#catalog">Каталог</a>
+                    <a href="#about">О нас</a>
+                    <a href="#contacts">Контакты</a>
+                </nav>
+                <div class="cart-icon" onclick="openCart()">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Герой -->
+    <section class="hero" id="home">
+        <div class="container">
+            <h1>Магазин люстр</h1>
+            <p>Красивое освещение для вашего дома</p>
+            <a href="#catalog" class="btn">Смотреть каталог</a>
+        </div>
+    </section>
+
+    <!-- Категории -->
+    <section class="section" id="catalog">
+        <div class="container">
+            <h2 class="section-title">Категории</h2>
+            <div class="categories-grid">
+                <div class="category" style="background: linear-gradient(135deg, #667eea, #764ba2)">
+                    <h3>Люкс</h3>
+                    <p>Элитные люстры</p>
+                </div>
+                <div class="category" style="background: linear-gradient(135deg, #f093fb, #f5576c)">
+                    <h3>Современные</h3>
+                    <p>Модные тенденции</p>
+                </div>
+                <div class="category" style="background: linear-gradient(135deg, #4facfe, #00f2fe)">
+                    <h3>Классические</h3>
+                    <p>Проверенная классика</p>
+                </div>
+                <div class="category" style="background: linear-gradient(135deg, #43e97b, #38f9d7)">
+                    <h3>Детские</h3>
+                    <p>Для детской комнаты</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Популярные товары -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Популярные товары</h2>
+            <div class="products-grid">
+                <!-- Товар 1 -->
+                <div class="product-card">
+                    <span class="badge">Хит</span>
+                    <div class="product-image"></div>
+                    <div class="product-info">
+                        <h3>Люстра "Кристалл"</h3>
+                        <div class="price">12 990 ₽</div>
+                        <button onclick="addToCart(this)">В корзину</button>
+                    </div>
+                </div>
+
+                <!-- Товар 2 -->
+                <div class="product-card">
+                    <span class="badge new">Новинка</span>
+                    <div class="product-image"></div>
+                    <div class="product-info">
+                        <h3>Люстра "Сфера"</h3>
+                        <div class="price">8 490 ₽</div>
+                        <button onclick="addToCart(this)">В корзину</button>
+                    </div>
+                </div>
+
+                <!-- Товар 3 -->
+                <div class="product-card">
+                    <div class="product-image"></div>
+                    <div class="product-info">
+                        <h3>Люстра "Венеция"</h3>
+                        <div class="price">18 990 ₽</div>
+                        <button onclick="addToCart(this)">В корзину</button>
+                    </div>
+                </div>
+
+                <!-- Товар 4 со скидкой -->
+                <div class="product-card">
+                    <span class="badge sale">-20%</span>
+                    <div class="product-image"></div>
+                    <div class="product-info">
+                        <h3>Люстра "Лофт"</h3>
+                        <div class="price">
+                            <span class="old-price">18 700 ₽</span>
+                            14 990 ₽
+                        </div>
+                        <button onclick="addToCart(this)">В корзину</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Преимущества -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Наши преимущества</h2>
+            <div class="features-grid">
+                <div class="feature">
+                    <i class="fas fa-truck"></i>
+                    <h3>Бесплатная доставка</h3>
+                    <p>При заказе от 20 000 ₽</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Гарантия 2 года</h3>
+                    <p>На все люстры</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-undo-alt"></i>
+                    <h3>Возврат 14 дней</h3>
+                    <p>Без проблем</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-wrench"></i>
+                    <h3>Установка</h3>
+                    <p>Профессиональный монтаж</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Подвал -->
+    <footer class="footer" id="contacts">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <h3>О нас</h3>
+                    <p>Магазин качественных люстр с 2010 года</p>
+                </div>
+                <div>
+                    <h3>Контакты</h3>
+                    <p><i class="fas fa-phone"></i> +7 (999) 123-45-67</p>
+                    <p><i class="fas fa-envelope"></i> info@lustershop.ru</p>
+                </div>
+                <div>
+                    <h3>Мы в соцсетях</h3>
+                    <div class="social">
+                        <a href="#"><i class="fab fa-telegram"></i></a>
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 LusterShop. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Модальное окно корзины -->
+    <div class="cart-modal" id="cartModal">
+        <div class="cart-content" id="cartContent">
+            <div class="cart-header">
+                <h2>Корзина</h2>
+                <span class="close-cart" onclick="closeCart()">&times;</span>
+            </div>
+            <div id="cartItems"></div>
+            <div class="cart-total" id="cartTotal">Итого: 0 ₽</div>
+            <div class="cart-buttons">
+                <button class="close-btn" onclick="closeCart()">Закрыть</button>
+                <button class="checkout-btn" onclick="checkout()">Оформить заказ</button>
+            </div>
+        </div>
+    </div>
+
+   <script>
+    // Корзина
+    let cart = [];
+
+    // ПРАВИЛЬНЫЕ ЦЕНЫ ДЛЯ ТОВАРОВ (задаем вручную)
+    const productPrices = {
+        'Люстра "Кристалл"': 12990,
+        'Люстра "Сфера"': 8490,
+        'Люстра "Венеция"': 18990,
+        'Люстра "Лофт"': 14990
+    };
+
+    // Функция добавления в корзину
+    function addToCart(button) {
+        // Находим карточку товара
+        const card = button.closest('.product-card');
+        
+        // Получаем название товара
+        const titleElement = card.querySelector('h3');
+        const title = titleElement.textContent.trim();
+        
+        // Берем цену из нашего справочника
+        const price = productPrices[title] || 0;
+        
+        console.log('Добавляем товар:', title, 'по цене:', price);
+        
+        if (price === 0) {
+            alert('Ошибка: не удалось определить цену товара');
+            return;
+        }
+        
+        // Добавляем в корзину
+        cart.push({
+            id: Date.now() + Math.random(), // уникальный ID для каждого товара
+            title: title,
+            price: price
+        });
+        
+        // Обновляем счетчик
+        updateCartCount();
+        
+        // Показываем уведомление
+        alert(`✓ Товар "${title}" добавлен в корзину!\nЦена: ${price.toLocaleString()} ₽`);
+        
+        console.log('Корзина:', cart);
+    }
+
+    // Обновление счетчика
+    function updateCartCount() {
+        const counter = document.querySelector('.cart-count');
+        if (counter) {
+            counter.textContent = cart.length;
+        }
+    }
+
+    // Удаление товара из корзины
+    function removeFromCart(id) {
+        cart = cart.filter(item => item.id !== id);
+        updateCartCount();
+        updateCartDisplay(); // Обновляем отображение корзины
+        showNotification('Товар удален из корзины');
+    }
+
+    // Очистка всей корзины
+    function clearCart() {
+        if (cart.length === 0) {
+            alert('Корзина уже пуста');
+            return;
+        }
+        
+        if (confirm('Очистить всю корзину?')) {
+            cart = [];
+            updateCartCount();
+            updateCartDisplay();
+            showNotification('Корзина очищена');
+        }
+    }
+
+    // Показать уведомление
+    function showNotification(message) {
+        // Создаем уведомление
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #10b981;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            z-index: 2000;
+            animation: slideIn 0.3s;
+        `;
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        // Удаляем через 2 секунды
+        setTimeout(() => {
+            notification.remove();
+        }, 2000);
+    }
+
+    // Обновление отображения корзины
+    function updateCartDisplay() {
+        const cartItemsDiv = document.getElementById('cartItems');
+        const cartTotalDiv = document.getElementById('cartTotal');
+        
+        if (!cartItemsDiv) return;
+        
+        // Очищаем содержимое
+        cartItemsDiv.innerHTML = '';
+        
+        if (cart.length === 0) {
+            cartItemsDiv.innerHTML = '<p style="text-align: center; color: #666; padding: 40px;">Корзина пуста</p>';
+            cartTotalDiv.innerHTML = 'Итого: <span style="color: #fbbf24;">0 ₽</span>';
+            
+            // Убираем кнопку очистки, если она есть
+            const clearBtn = document.querySelector('.clear-cart-btn');
+            if (clearBtn) clearBtn.style.display = 'none';
+        } else {
+            let total = 0;
+            
+            // Считаем итог
+            cart.forEach(item => {
+                total += item.price;
+            });
+            
+            // Группируем одинаковые товары для отображения
+            const grouped = {};
+            cart.forEach(item => {
+                const key = item.title;
+                if (grouped[key]) {
+                    grouped[key].quantity++;
+                    grouped[key].total += item.price;
+                    grouped[key].ids.push(item.id);
+                } else {
+                    grouped[key] = {
+                        title: item.title,
+                        price: item.price,
+                        quantity: 1,
+                        total: item.price,
+                        ids: [item.id]
+                    };
+                }
+            });
+            
+            // Отображаем товары
+            for (let key in grouped) {
+                const item = grouped[key];
+                
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'cart-item';
+                itemDiv.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #eee;';
+                
+                // Создаем кнопку удаления для каждого товара
+                const removeBtn = document.createElement('button');
+                removeBtn.innerHTML = '<i class="fas fa-trash"></i>';
+                removeBtn.style.cssText = `
+                    background: none;
+                    border: none;
+                    color: #999;
+                    cursor: pointer;
+                    padding: 5px;
+                    margin-left: 10px;
+                    transition: color 0.3s;
+                `;
+                removeBtn.onmouseover = () => removeBtn.style.color = '#ef4444';
+                removeBtn.onmouseout = () => removeBtn.style.color = '#999';
+                removeBtn.onclick = () => {
+                    // Удаляем все товары этого типа или только один?
+                    if (item.quantity > 1) {
+                        if (confirm(`Удалить один товар "${item.title}" или все?`, 'Это действие удалит один товар')) {
+                            // Удаляем один товар
+                            removeFromCart(item.ids[0]);
+                        }
+                    } else {
+                        removeFromCart(item.ids[0]);
+                    }
+                };
+                
+                const infoDiv = document.createElement('div');
+                infoDiv.innerHTML = `
+                    <div>
+                        <strong>${item.title}</strong>
+                        <div style="font-size: 14px; color: #666;">
+                            ${item.price.toLocaleString()} ₽ × ${item.quantity}
+                        </div>
+                    </div>
+                `;
+                
+                const priceDiv = document.createElement('div');
+                priceDiv.style.cssText = 'font-weight: bold; color: #fbbf24; display: flex; align-items: center;';
+                priceDiv.innerHTML = `${item.total.toLocaleString()} ₽`;
+                priceDiv.appendChild(removeBtn);
+                
+                itemDiv.appendChild(infoDiv);
+                itemDiv.appendChild(priceDiv);
+                cartItemsDiv.appendChild(itemDiv);
+            }
+            
+            cartTotalDiv.innerHTML = `Итого: <span style="color: #fbbf24; font-size: 24px;">${total.toLocaleString()} ₽</span>`;
+            
+            // Показываем кнопку очистки
+            const clearBtn = document.querySelector('.clear-cart-btn');
+            if (clearBtn) clearBtn.style.display = 'block';
+        }
+    }
+
+    // Открытие корзины
+    function openCart() {
+        const modal = document.getElementById('cartModal');
+        updateCartDisplay();
+        modal.classList.add('show');
+    }
+
+    // Закрытие корзины
+    function closeCart() {
+        document.getElementById('cartModal').classList.remove('show');
+    }
+
+    // Оформление заказа
+    function checkout() {
+        if (cart.length === 0) {
+            alert('Корзина пуста!');
+            return;
+        }
+        
+        let total = 0;
+        cart.forEach(item => total += item.price);
+        
+        alert(`Спасибо за заказ!\nСумма: ${total.toLocaleString()} ₽\n\nНаш менеджер свяжется с вами для подтверждения.`);
+        
+        // Очищаем корзину после оформления
+        cart = [];
+        updateCartCount();
+        closeCart();
+    }
+
+    // Закрытие по клику вне окна
+    document.getElementById('cartModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeCart();
+        }
+    });
+
+    // Проверяем при загрузке страницы
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Скрипт корзины загружен');
+        console.log('Доступные товары:', Object.keys(productPrices));
+        
+        // Добавляем кнопку очистки в корзину, если её нет
+        const cartFooter = document.querySelector('.cart-buttons');
+        if (cartFooter && !document.querySelector('.clear-cart-btn')) {
+            const clearBtn = document.createElement('button');
+            clearBtn.className = 'clear-cart-btn';
+            clearBtn.textContent = 'Очистить корзину';
+            clearBtn.style.cssText = `
+                background: #ef4444;
+                color: white;
+                border: none;
+                padding: 12px;
+                border-radius: 5px;
+                cursor: pointer;
+                font-weight: bold;
+                margin-top: 10px;
+                width: 100%;
+                transition: background 0.3s;
+            `;
+            clearBtn.onmouseover = () => clearBtn.style.background = '#dc2626';
+            clearBtn.onmouseout = () => clearBtn.style.background = '#ef4444';
+            clearBtn.onclick = clearCart;
+            cartFooter.parentNode.insertBefore(clearBtn, cartFooter.nextSibling);
+        }
+    });
+</script>
+</body>
+</html>
